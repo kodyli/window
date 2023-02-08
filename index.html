@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<head>
+    <meta charset="utf-8">
+    <title>辉浩系统窗</title>
+    <link rel="stylesheet" href="./bootstrap.min.css">
+    <link rel="stylesheet" href="./jquery-ui.min.css">
+    <script src="./jquery-3.6.0.min.js"></script>
+    <script src="./jquery-ui.min.js"></script>
+    <script src="./read-excel-file.min.js"></script>
+    <script src="./html2canvas.min.js"></script>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td,
+        th {
+            border: 1px solid #dddddd;
+            text-align: center;
+            padding: 2px;
+        }
+
+        .cycle {
+            width: 50px;
+            height: 50px;
+            line-height: 50px;
+            border-radius: 50%;
+            background-color: #c5c5c5;
+            text-align: center;
+            vertical-align: middle;
+            margin: auto 0;
+
+            cursor: pointer;
+        }
+
+        .cycle.reset {
+            position: fixed;
+            top: 45px;
+            right: 50px;
+        }
+
+        .cycle.print {
+            position: fixed;
+            top: 100px;
+            right: 50px;
+        }
+
+        .cutting>table tbody td:last-child {
+            padding-left: 2px;
+            text-align: left;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="tabs">
+        <ul>
+            <li><a href="#tabs-file">上传数据</a></li>
+            <li><a href="#tabs-detail">汇总</a></li>
+        </ul>
+        <div id="tabs-file">
+            <div>
+                <input id="file" type="file">
+            </div>
+            <div id="report-source"></div>
+        </div>
+        <div id="tabs-detail">
+            <div class="container">
+                <div class="filter">
+                    <div class="row">
+                        <h3>选择数据：</h3>
+                        <p id="widthes"></p>
+                        <p id="heights"></p>
+                        <p id="floors"></p>
+                        <p id="codes"></p>
+                        <p id="directions"></p>
+                    </div>
+                </div>
+                <div id="reports">
+                    <div id="detail-reports" class="row">
+                        <h3>数据汇总：</h3>
+                        <div class="col-lg-1 col-md-1 col-sm-1">
+                            <div class="row" id="width-all-report" style="margin-bottom: 10px;"></div>
+                            <div class="row" id="height-all-report"></div>
+                        </div>
+                        <div class="col-lg-11 col-md-11 col-sm-11" id="width-direction-report"></div>
+                    </div>
+
+                    <div id="cutting-reports" class="row">
+                        <h3>下料数据：</h3>
+                        <div class="col-lg-12 col-md-12 col-sm-12 cutting" id="cutting-report"></div>
+                    </div>
+                </div>
+
+            </div>
+            <div id="reset-filter" class="cycle reset">
+                刷新
+            </div>
+            <div id="print-detail-reports" class="cycle print">
+                打印
+            </div>
+        </div>
+    </div>
+    <script src="./reports.js"></script>
+    <script src="./index.js"></script>
+</body></html>
