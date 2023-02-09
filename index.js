@@ -290,18 +290,14 @@ $(function () {
     var promise;
     $('#print-detail-reports').click(function () {
         if (!promise) {
-            promise = html2canvas(document.getElementById('reports'), {
+            var ele = document.getElementById('reports');
+            promise = html2canvas(ele, {
                 backgroundColor: null
             }).then(function (canvas) {
-                var myImage = canvas.toDataURL("image/png");
-                var tWindow = window.open("", );
-                $(tWindow.document.body)
-                    .html('<img src=' + myImage + '></img>')
-                    .ready(function () {
-                        tWindow.focus();
-                        tWindow.print();
-                        promise = null;
-                    });
+                printJS(canvas.toDataURL("image/png"), 'image');
+                promise = null;
+            }).catch(function(){
+                 promise = null;
             });
         }
     });

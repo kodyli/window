@@ -6,10 +6,12 @@
     <title>辉浩系统窗</title>
     <link rel="stylesheet" href="./bootstrap.min.css">
     <link rel="stylesheet" href="./jquery-ui.min.css">
+    <link rel="stylesheet" href="./print.min.css">
     <script src="./jquery-3.6.0.min.js"></script>
     <script src="./jquery-ui.min.js"></script>
     <script src="./read-excel-file.min.js"></script>
     <script src="./html2canvas.min.js"></script>
+    <script src="./print.min.js"></script>
     <style>
         table {
             border-collapse: collapse;
@@ -52,6 +54,7 @@
             padding-left: 2px;
             text-align: left;
         }
+
     </style>
 </head>
 
@@ -62,10 +65,12 @@
             <li><a href="#tabs-detail">汇总</a></li>
         </ul>
         <div id="tabs-file">
-            <div>
-                <input id="file" type="file">
+            <div class="container">
+                <div>
+                    <input id="file" type="file">
+                </div>
+                <div id="report-source"></div>
             </div>
-            <div id="report-source"></div>
         </div>
         <div id="tabs-detail">
             <div class="container">
@@ -79,22 +84,21 @@
                         <p id="directions"></p>
                     </div>
                 </div>
-                <div id="reports">
-                    <div id="detail-reports" class="row">
-                        <h3>数据汇总：</h3>
-                        <div class="col-lg-1 col-md-1 col-sm-1">
-                            <div class="row" id="width-all-report" style="margin-bottom: 10px;"></div>
-                            <div class="row" id="height-all-report"></div>
-                        </div>
-                        <div class="col-lg-11 col-md-11 col-sm-11" id="width-direction-report"></div>
+            </div>
+            <div id="reports" class="container">
+                <div id="detail-reports" class="row">
+                    <h3>数据汇总：</h3>
+                    <div class="col-lg-1 col-md-1 col-sm-1">
+                        <div class="row" id="width-all-report" style="margin-bottom: 10px;"></div>
+                        <div class="row" id="height-all-report"></div>
                     </div>
-
-                    <div id="cutting-reports" class="row">
-                        <h3>下料数据：</h3>
-                        <div class="col-lg-12 col-md-12 col-sm-12 cutting" id="cutting-report"></div>
-                    </div>
+                    <div class="col-lg-11 col-md-11 col-sm-11" id="width-direction-report"></div>
                 </div>
 
+                <div id="cutting-reports" class="row">
+                    <h3>下料数据：</h3>
+                    <div class="col-lg-12 col-md-12 col-sm-12 cutting" id="cutting-report"></div>
+                </div>
             </div>
             <div id="reset-filter" class="cycle reset">
                 刷新
@@ -106,4 +110,6 @@
     </div>
     <script src="./reports.js"></script>
     <script src="./index.js"></script>
-</body></html>
+</body>
+
+</html>
