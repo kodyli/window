@@ -100,152 +100,71 @@ function createReports() {
     $('#cutting-report').html(rows);
 }
 
-function buildWidthesFilter() {
-    var widthesHtml = $('#widthes').html("选择宽度: ");
-    WIDTHES.forEach(function (width, index) {
-        var label = $(`<label for="width-${width}">${width}</label>`);
-        var input = $(`<input type="checkbox" checked id="width-${width}" value="${width}">`).click(function (a, b) {
-            var index = WIDTHES.indexOf(width);
+function buildFilter(id, label, filters, sort, selectAll) {
+    filters = filters || [];
+    sort = sort || function () {
+        return 1;
+    };
+    selectAll = !!selectAll;
+    var html = $(`#${id}`).html(`${label}: `);
+    filters.forEach(function (filter, index) {
+        var label = $(`<label for="${id}-${filter}">${filter}</label>`);
+        var input = $(`<input type="checkbox" ${selectAll||index==0?'checked':' '} id="${id}-${filter}" value="${filter}">`).click(function (a, b) {
+            var index = filters.indexOf(filter);
             if (index > -1) {
-                WIDTHES.splice(index, 1);
+                filters.splice(index, 1);
             } else {
-                WIDTHES.push(width);
+                filters.push(filter);
             }
-            WIDTHES.sort(function (a, b) {
-                return a - b;
-            });
+            filters.sort(sort);
             createReports();
         });
         label.append(input);
-        widthesHtml.append(label);
+        html.append(label);
     });
-
-    $("#widthes input").checkboxradio({
+    if (!selectAll) {
+        filters.splice(1);
+    }
+    $(`#${id} input`).checkboxradio({
         icon: false
     });
+}
+
+function buildWidthesFilter() {
+    buildFilter('widthes', '选择宽度', WIDTHES, function (a, b) {
+        return a - b;
+    }, true);
 }
 
 function buildHeightsFilter() {
-    var heightsHtml = $('#heights').html("选择高度: ");
-    HEIGHTS.forEach(function (height, index) {
-        var label = $(`<label for="height-${height}">${height}</label>`);
-        var input = $(`<input type="checkbox" checked id="height-${height}" value="${height}">`).click(function (a, b) {
-            var index = HEIGHTS.indexOf(height);
-            if (index > -1) {
-                HEIGHTS.splice(index, 1);
-            } else {
-                HEIGHTS.push(height);
-            }
-            HEIGHTS.sort(function (a, b) {
-                return a - b;
-            });
-            createReports();
-        });
-        label.append(input);
-        heightsHtml.append(label);
-    });
-
-    $("#heights input").checkboxradio({
-        icon: false
-    });
+    buildFilter('heights', '选择高度', HEIGHTS, function (a, b) {
+        return a - b;
+    }, true);
 }
 
-function buildDirectionsFilter() {
-    var directionsHtml = $("#directions").html("选择开向: ");
-    DIRECTIONS.forEach(function (direction, index) {
-        var label = $(`<label for="direction-${direction}">${direction}</label>`);
-        var input = $(`<input type="checkbox" ${index==0?'checked ':' '} id="direction-${direction}" value="${direction}">`).click(function (a, b) {
-            var index = DIRECTIONS.indexOf(direction);
-            if (index > -1) {
-                DIRECTIONS.splice(index, 1);
-            } else {
-                DIRECTIONS.push(direction);
-            }
-            DIRECTIONS.sort(function (a, b) {
-                return a.localeCompare(b);
-            });
-            createReports();
-        });
-        label.append(input);
-        directionsHtml.append(label);
-    });
-    DIRECTIONS.splice(1);
-    $("#directions input").checkboxradio({
-        icon: false
-    });
-}
 
 function buildCodesFilter() {
-    var codesHtml = $("#codes").html("选择编码: ");
-    CODES.forEach(function (code, index) {
-        var label = $(`<label for="code-${code}">${code}</label>`);
-        var input = $(`<input type="checkbox" checked id="code-${code}" value="${code}">`).click(function () {
-            var index = CODES.indexOf(code);
-            if (index > -1) {
-                CODES.splice(index, 1);
-            } else {
-                CODES.push(code);
-            }
-            CODES.sort(function (a, b) {
-                return a.localeCompare(b);
-            });
-            createReports();
-        });
-        label.append(input);
-        codesHtml.append(label);
-    });
-    $("#codes input").checkboxradio({
-        icon: false
-    });
+    buildFilter('codes', '选择编码', CODES, function (a, b) {
+        return a.localeCompare(b);
+    }, true);
 }
 
 function buildFloorsFilter() {
-    var floorsHtml = $('#floors').html("选择楼层: ");
-    FLOORS.forEach(function (floor) {
-        var label = $(`<label for="floor-${floor}">${floor}F</label>`);
-        var input = $(`<input type="checkbox" checked id="floor-${floor}" value="${floor}">`).click(function (a, b) {
-            var index = FLOORS.indexOf(floor);
-            if (index > -1) {
-                FLOORS.splice(index, 1);
-            } else {
-                FLOORS.push(floor);
-            }
-            FLOORS.sort(function (a, b) {
-                return a - b;
-            });
-            createReports();
-        });
-        label.append(input);
-        floorsHtml.append(label);
-    });
-    $("#floors input").checkboxradio({
-        icon: false
-    });
+    buildFilter('floors', '选择楼层', FLOORS, function (a, b) {
+        return a - b;
+    }, true);
+}
+
+function buildDirectionsFilter() {
+    buildFilter('directions', '选择开向', DIRECTIONS, function (a, b) {
+        return a.localeCompare(b);
+    }, false);
 }
 
 function buildTypesFilter() {
-    var typesHtml = $("#types").html("选择窗型: ");
-    TYPES.forEach(function (type, index) {
-        var label = $(`<label for="type-${type}">${type||'全部'}</label>`);
-        var input = $(`<input type="checkbox" ${index==0?'checked ':' '} id="type-${type}" value="${type}">`).click(function () {
-            var index = TYPES.indexOf(type);
-            if (index > -1) {
-                TYPES.splice(index, 1);
-            } else {
-                TYPES.push(type);
-            }
-            TYPES.sort(function (a, b) {
-                return a.localeCompare(b);
-            });
-            createReports();
-        });
-        label.append(input);
-        typesHtml.append(label);
-    });
-    TYPES.splice(1);
-    $("#types input").checkboxradio({
-        icon: false
-    });
+    buildFilter('types', '选择窗型', TYPES, function (a, b) {
+        return a.localeCompare(b);
+    }, false);
 }
 
 function buildFilters() {
@@ -256,13 +175,17 @@ function buildFilters() {
     buildFloorsFilter();
     buildTypesFilter();
 }
+
+function refresh() {
+    collectData();
+    buildFilters();
+    createReports();
+}
 $(function () {
     $("#tabs").tabs({
         beforeActivate: function (event, ui) {
             if (ui.newPanel.attr('id') == 'tabs-detail') {
-                collectData();
-                buildFilters();
-                createReports();
+                refresh();
             }
         }
     });
@@ -343,9 +266,5 @@ $(function () {
             });
         }
     });
-    $('#reset-filter').click(function () {
-        collectData();
-        buildFilters();
-        createReports();
-    });
+    $('#reset-filter').click(refresh);
 });
