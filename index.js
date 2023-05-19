@@ -194,7 +194,6 @@ function buildCodesFilter() {
         label.append(input);
         codesHtml.append(label);
     });
-    CODES.splice(1);
     $("#codes input").checkboxradio({
         icon: false
     });
