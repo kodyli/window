@@ -106,9 +106,12 @@ function buildFilter(id, label, filters, sort, selectAll) {
         return 1;
     };
     selectAll = !!selectAll;
+    if(filters.length<=1){
+        return;
+    }
     var html = $(`#${id}`).html(`${label}: `);
     filters.forEach(function (filter, index) {
-        var label = $(`<label for="${id}-${filter}">${filter}</label>`);
+        var label = $(`<label for="${id}-${filter}">${filter||'其他'}</label>`);
         var input = $(`<input type="checkbox" ${selectAll||index==0?'checked':' '} id="${id}-${filter}" value="${filter}">`).click(function (a, b) {
             var index = filters.indexOf(filter);
             if (index > -1) {
