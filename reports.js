@@ -157,7 +157,7 @@ Excel.prototype._toHead = function () {
     return '<tr><th>#</th><th>楼层</th><th>编号</th><th>宽</th><th>高</th><th>开向</th><th>窗型</th><th>防水</th><th>备注</th></tr>';
 };
 Excel.prototype._toRow = function (window, i) {
-    return $(`<tr><td>${i+1}</td><td>${window.floor}F</td><td>${window.code}</td><td>${window.width}</td><td>${window.height}</td><td>${window.direction}</td><td>${window.type}</td><td>${window.waterproof?'是':''}</td><td>${window.note}</td></tr>`);
+    return $(`<tr class='hover'><td>${i+1}</td><td>${window.floor}F</td><td>${window.code}</td><td>${window.width}</td><td>${window.height}</td><td>${window.direction}</td><td>${window.type}</td><td>${window.waterproof?'是':''}</td><td>${window.note}</td></tr>`);
 };
 Excel.prototype._toFoot = function () {
     return null;
