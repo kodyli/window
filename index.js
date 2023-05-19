@@ -227,7 +227,7 @@ function buildFloorsFilter() {
 function buildTypesFilter() {
     var typesHtml = $("#types").html("选择窗型: ");
     TYPES.forEach(function (type, index) {
-        var label = $(`<label for="type-${type}">${type}</label>`);
+        var label = $(`<label for="type-${type}">${type||'全部'}</label>`);
         var input = $(`<input type="checkbox" ${index==0?'checked ':' '} id="type-${type}" value="${type}">`).click(function () {
             var index = TYPES.indexOf(type);
             if (index > -1) {
