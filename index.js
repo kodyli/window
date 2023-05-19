@@ -179,7 +179,7 @@ function buildCodesFilter() {
     var codesHtml = $("#codes").html("选择编码: ");
     CODES.forEach(function (code, index) {
         var label = $(`<label for="code-${code}">${code}</label>`);
-        var input = $(`<input type="checkbox" ${index==0?'checked ':' '} id="code-${code}" value="${code}">`).click(function () {
+        var input = $(`<input type="checkbox" checked id="code-${code}" value="${code}">`).click(function () {
             var index = CODES.indexOf(code);
             if (index > -1) {
                 CODES.splice(index, 1);
