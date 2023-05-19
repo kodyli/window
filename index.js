@@ -3,6 +3,7 @@ var WIDTHES = [],
     DIRECTIONS = [],
     CODES = [],
     FLOORS = [],
+    TYPES = [],
     TOTAL_ROWS = [];
 
 function collectData(rows) {
@@ -11,6 +12,8 @@ function collectData(rows) {
     DIRECTIONS = [];
     CODES = [];
     FLOORS = [];
+    TYPES = [];
+
     TOTAL_ROWS.forEach(function (window) {
         if (WIDTHES.indexOf(window.width) < 0) {
             WIDTHES.push(window.width);
@@ -26,6 +29,9 @@ function collectData(rows) {
         }
         if (FLOORS.indexOf(window.floor) < 0) {
             FLOORS.push(window.floor);
+        }
+        if (TYPES.indexOf(window.type) < 0) {
+            TYPES.push(window.type);
         }
     });
     WIDTHES.sort(function (a, b) {
@@ -43,14 +49,17 @@ function collectData(rows) {
     FLOORS.sort(function (a, b) {
         return a - b;
     });
+    TYPES.sort(function (a, b) {
+        return a.localeCompare(b);
+    });
 }
 
 function createReports() {
-    var widthAllReport = new DirectionWidthReport(TOTAL_ROWS, WIDTHES, HEIGHTS, DIRECTIONS, CODES, FLOORS);
+    var widthAllReport = new DirectionWidthReport(TOTAL_ROWS, WIDTHES, HEIGHTS, DIRECTIONS, CODES, FLOORS, TYPES);
     $('#width-all-report').html(widthAllReport.toHtml());
-    var heightAllReport = new DirectionHeightReport(TOTAL_ROWS, WIDTHES, HEIGHTS, DIRECTIONS, CODES, FLOORS);
+    var heightAllReport = new DirectionHeightReport(TOTAL_ROWS, WIDTHES, HEIGHTS, DIRECTIONS, CODES, FLOORS, TYPES);
     $('#height-all-report').html(heightAllReport.toHtml());
-    
+
     var index = 0;
     var rows = [];
     var row = $('<div class="row"></div>');
@@ -59,7 +68,7 @@ function createReports() {
             rows.push(row);
             row = $('<div class="row"></div>');
         }
-        var detailReport = new DirectionReport(TOTAL_ROWS, WIDTHES, HEIGHTS, direction, CODES, FLOORS);
+        var detailReport = new DirectionReport(TOTAL_ROWS, WIDTHES, HEIGHTS, direction, CODES, FLOORS, TYPES);
         if (!detailReport.isEmpty()) {
             var col = $("<div class='col-lg-4 col-md-4 col-sm-4' style='margin-bottom:10px;'></div>").append(detailReport.toHtml());
             row.append(col);
@@ -68,7 +77,7 @@ function createReports() {
     });
     rows.push(row);
     $('#width-direction-report').html(rows);
-    
+
     index = 0;
     rows = [];
     row = $('<div class="row"></div>');
@@ -78,7 +87,7 @@ function createReports() {
             rows.push(row);
             row = $('<div class="row"></div>');
         }
-        var cuttingReport = new CuttingReport(TOTAL_ROWS, WIDTHES, HEIGHTS, direction, CODES, FLOORS);
+        var cuttingReport = new CuttingReport(TOTAL_ROWS, WIDTHES, HEIGHTS, direction, CODES, FLOORS, TYPES);
         if (!cuttingReport.isEmpty()) {
             var col = $("<div class='col-lg-4 col-md-4 col-sm-4' style='margin-bottom:10px;'></div>");
             col.append(`<h4>开向：${direction}</h4>`);
@@ -214,16 +223,46 @@ function buildFloorsFilter() {
         icon: false
     });
 }
+
+function buildTypesFilter() {
+    var typesHtml = $("#types").html("选择窗型: ");
+    TYPES.forEach(function (type, index) {
+        var label = $(`<label for="type-${type}">${type}</label>`);
+        var input = $(`<input type="checkbox" ${index==0?'checked ':' '} id="type-${type}" value="${type}">`).click(function () {
+            var index = TYPES.indexOf(type);
+            if (index > -1) {
+                TYPES.splice(index, 1);
+            } else {
+                TYPES.push(type);
+            }
+            TYPES.sort(function (a, b) {
+                return a.localeCompare(b);
+            });
+            createReports();
+        });
+        label.append(input);
+        typesHtml.append(label);
+    });
+    TYPES.splice(1);
+    $("#types input").checkboxradio({
+        icon: false
+    });
+}
+
+function buildFilters() {
+    buildWidthesFilter();
+    buildHeightsFilter();
+    buildDirectionsFilter();
+    buildCodesFilter();
+    buildFloorsFilter();
+    buildTypesFilter();
+}
 $(function () {
     $("#tabs").tabs({
         beforeActivate: function (event, ui) {
             if (ui.newPanel.attr('id') == 'tabs-detail') {
                 collectData();
-                buildWidthesFilter();
-                buildHeightsFilter();
-                buildDirectionsFilter();
-                buildCodesFilter();
-                buildFloorsFilter();
+                buildFilters();
                 createReports();
             }
         }
@@ -258,6 +297,10 @@ $(function () {
         },
         '防水': {
             prop: 'waterproof',
+            type: String
+        },
+        '窗型': {
+            prop: 'type',
             type: String
         },
         '备注': {
@@ -296,18 +339,14 @@ $(function () {
             }).then(function (canvas) {
                 printJS(canvas.toDataURL("image/png"), 'image');
                 promise = null;
-            }).catch(function(){
-                 promise = null;
+            }).catch(function () {
+                promise = null;
             });
         }
     });
     $('#reset-filter').click(function () {
         collectData();
-        buildWidthesFilter();
-        buildHeightsFilter();
-        buildDirectionsFilter();
-        buildCodesFilter();
-        buildFloorsFilter();
+        buildFilters();
         createReports();
     });
 });

@@ -6,6 +6,7 @@ function Window(data) {
     this.direction = data.direction;
     this.waterproof = data.waterproof ? true : false;
     this.note = data.note || '';
+    this.type = data.type || '';
 }
 
 Window.prototype = Object.create({
@@ -57,6 +58,9 @@ Window.prototype = Object.create({
     },
     comparesByNote: function (window) {
         return this.note.localeCompare(window.note);
+    },
+    compareByType: function(window){
+        return this.type.localeCompare(window.type);
     }
 });
 
@@ -150,18 +154,18 @@ Excel.prototype._sort = function () {
     });
 };
 Excel.prototype._toHead = function () {
-    return '<tr><th>#</th><th>楼层</th><th>编号</th><th>宽</th><th>高</th><th>开向</th><th>防水</th><th>备注</th></tr>';
+    return '<tr><th>#</th><th>楼层</th><th>编号</th><th>宽</th><th>高</th><th>开向</th><th>窗型</th><th>防水</th><th>备注</th></tr>';
 };
 Excel.prototype._toRow = function (window, i) {
-    return $(`<tr><td>${i+1}</td><td>${window.floor}F</td><td>${window.code}</td><td>${window.width}</td><td>${window.height}</td><td>${window.direction}</td><td>${window.waterproof?'是':''}</td><td>${window.note}</td></tr>`);
+    return $(`<tr><td>${i+1}</td><td>${window.floor}F</td><td>${window.code}</td><td>${window.width}</td><td>${window.height}</td><td>${window.direction}</td><td>${window.type}</td><td>${window.waterproof?'是':''}</td><td>${window.note}</td></tr>`);
 };
 Excel.prototype._toFoot = function () {
     return null;
 };
 
-function ADirectionSummarizeReport(windows, widthes, heights, directions, codes, floors) {
+function ADirectionSummarizeReport(windows, widthes, heights, directions, codes, floors, types) {
     var filteredWindows = windows.filter(function (window) {
-        return widthes.indexOf(window.width) > -1 && heights.indexOf(window.height) > -1 && directions.indexOf(window.direction) > -1 && codes.indexOf(window.code) > -1 && floors.indexOf(window.floor) > -1;
+        return widthes.indexOf(window.width) > -1 && heights.indexOf(window.height) > -1 && directions.indexOf(window.direction) > -1 && codes.indexOf(window.code) > -1 && types.indexOf(window.type) > -1 && floors.indexOf(window.floor) > -1;
     });
     AReport.call(this, filteredWindows);
     this._counts = [0, 0];
@@ -206,11 +210,11 @@ ADirectionSummarizeReport.WIDTH = {
     head: '宽'
 };
 
-function DirectionWidthReport(windows, widthes, heights, directions, codes, floors) {
+function DirectionWidthReport(windows, widthes, heights, directions, codes, floors, types) {
     if (!(this instanceof DirectionWidthReport)) {
-        return new DirectionWidthReport(windows, widthes, heights, directions, codes, floors);
+        return new DirectionWidthReport(windows, widthes, heights, directions, codes, floors, types);
     }
-    ADirectionSummarizeReport.call(this, windows, widthes, heights, directions, codes, floors);
+    ADirectionSummarizeReport.call(this, windows, widthes, heights, directions, codes, floors, types);
 }
 DirectionWidthReport.prototype = Object.create(ADirectionSummarizeReport.prototype);
 DirectionWidthReport.prototype.constructor = DirectionWidthReport;
@@ -232,11 +236,11 @@ DirectionWidthReport.prototype._getType = function () {
     return ADirectionSummarizeReport.WIDTH;
 };
 
-function DirectionHeightReport(windows, widthes, heights, directions, codes, floors) {
+function DirectionHeightReport(windows, widthes, heights, directions, codes, floors, types) {
     if (!(this instanceof DirectionHeightReport)) {
-        return new DirectionHeightReport(windows, widthes, heights, directions, codes, floors);
+        return new DirectionHeightReport(windows, widthes, heights, directions, codes, floors, types);
     }
-    ADirectionSummarizeReport.call(this, windows, widthes, heights, directions, codes, floors);
+    ADirectionSummarizeReport.call(this, windows, widthes, heights, directions, codes, floors, types);
 }
 DirectionHeightReport.prototype = Object.create(ADirectionSummarizeReport.prototype);
 DirectionHeightReport.prototype.constructor = DirectionHeightReport;
@@ -258,12 +262,12 @@ DirectionHeightReport.prototype._getType = function () {
     return ADirectionSummarizeReport.HEIGHT;
 };
 
-function DirectionReport(windows, widthes, heights, direction, codes, floors) {
+function DirectionReport(windows, widthes, heights, direction, codes, floors, types) {
     if (!(this instanceof DirectionReport)) {
-        return new DirectionReport(windows, widthes, heights, directions, codes, floors);
+        return new DirectionReport(windows, widthes, heights, directions, codes, floors, types);
     }
     var filteredWindows = windows.filter(function (window) {
-        return widthes.indexOf(window.width) > -1 && heights.indexOf(window.height) > -1 && window.direction == direction && codes.indexOf(window.code) > -1 && floors.indexOf(window.floor) > -1;
+        return widthes.indexOf(window.width) > -1 && heights.indexOf(window.height) > -1 && window.direction == direction && codes.indexOf(window.code) > -1 && types.indexOf(window.type) > -1 && floors.indexOf(window.floor) > -1;
     });
     AReport.call(this, filteredWindows);
     this._counts = [0, 0];
@@ -305,12 +309,12 @@ DirectionReport.prototype._toFoot = function () {
     return `<tr><td>${this._windows.length}</td><td colspan="7">合计</td>`;
 };
 
-function CuttingReport(windows, widthes, heights, direction, codes, floors) {
+function CuttingReport(windows, widthes, heights, direction, codes, floors, types) {
     if (!(this instanceof CuttingReport)) {
-        return new CuttingReport(windows, widthes, heights, directions, codes, floors);
+        return new CuttingReport(windows, widthes, heights, directions, codes, floors, types);
     }
     var filteredWindows = windows.filter(function (window) {
-        return widthes.indexOf(window.width) > -1 && heights.indexOf(window.height) > -1 && direction ===window.direction && codes.indexOf(window.code) > -1 && floors.indexOf(window.floor) > -1;
+        return widthes.indexOf(window.width) > -1 && heights.indexOf(window.height) > -1 && direction ===window.direction && codes.indexOf(window.code) > -1 && types.indexOf(window.type) > -1 && floors.indexOf(window.floor) > -1;
     });
     AReport.call(this, filteredWindows);
     this._count = 0;
